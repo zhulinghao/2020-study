@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>my vue</title>
+</head>
+<body>
+  <div id="app">
+    <h2 v-on:click="handleClick">人员卡片</h2>
+    <h3>{{person.name}}--{{person.gender}}</h3>
+    <h3>爱好：{{person.hobby}}</h3>
+    <h3>工作：{{person.job}}</h3>
+    <hr>
+    <div v-text="msg"></div>
+    <div v-text="person.job"></div>
+    <div v-html="htmlstr"></div>
+    <input type="text" v-model="msg">
+  </div>
+  <script src="./myVue.js"></script>
+  <script>
+    const vm = new MyVue({
+      el: "#app",
+      data: {
+        person: {
+          name: 'zlh',
+          gender: '男',
+          hobby: 'play game',
+          job: "front end"
+        },
+        msg: 'leran vue',
+        htmlstr: '<b><em>html str</em></b>'
+      },
+      methods: {
+        handleClick() {
+          alert('click title')
+        }
+      }
+    })
+  </script>
+</body>
+</html>
