@@ -26,7 +26,11 @@ const compileUtil = {
   },
   on(node,expr,vm,eventName) {
     let fn = vm.$options.methods[expr];
-    node.addEventListener(eventName, fn);
+    node.addEventListener(eventName, fn.bind(vm), true);
+  },
+  bind(node,expr,vm,attrName) {
+    const value = this.getVal(expr, vm);
+    this.updater.bindUpdater(node, attrName, value)
   },
   updater: {
     modelUpdater(node, value) {
@@ -37,6 +41,9 @@ const compileUtil = {
     },
     htmlUpdater(node, value) {
       node.innerHTML = value;
+    },
+    bindUpdater(node, attrName, value) {
+      node.setAttribute(attrName, value);
     }
   }
 }
@@ -83,6 +90,14 @@ class Compile {
         // 删除标签上的属性
         node.removeAttribute(name);
       }
+      // 处理 @click 这种属性
+      else if(this.isEventName(name)) {
+        const [,eventName] = name.split('@');  // text on:click
+        // 更新数据，数据驱动视图
+        compileUtil['on'](node, value, this.vm, eventName);
+        // 删除标签上的属性
+        node.removeAttribute(name);
+      }
     });
   }
   compileText(node) {
@@ -106,6 +121,9 @@ class Compile {
   isDirective(attrName) {
     return attrName.startsWith('v-');
   }
+  isEventName(eventName) {
+    return eventName.startsWith('@');
+  }
   // 是否是元素节点对象
   isElementNode(node) {
     return node.nodeType === 1;
@@ -118,6 +136,8 @@ class MyVue {
     this.$data = options.data;
     this.$options = options;
     if(this.$el) {
+      new Observe(this.$data)
+
       // 解析器
       new Compile(this.$el, this)
     }
