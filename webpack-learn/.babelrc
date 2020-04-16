@@ -1,0 +1,6 @@
+{
+  "presets": [
+    "@babel/preset-env", // es6、es7解析成es5
+    "@babel/preset-react", // 解析react语法
+  ]
+}

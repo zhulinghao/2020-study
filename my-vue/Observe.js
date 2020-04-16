@@ -63,7 +63,7 @@ class Observe {
         Dep.target && dep.addSub(Dep.target)
         return value
       },
-      set(newVal) {
+      set: (newVal) => {
         this.observe(newVal);
         if(newVal !== value) {
           value = newVal;

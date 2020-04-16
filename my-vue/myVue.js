@@ -18,6 +18,10 @@ const compileUtil = {
   },
   html(node,expr,vm) {
     const value = this.getVal(expr, vm);
+    // 声明订阅者，就会在Dep中添加订阅者， 当observer劫持到数据变化时，遍历Dep中的订阅者，如果value有更新的话，触发这个回调函数
+    new Watcher(vm, expr, (newVal) => {
+      this.updater.htmlUpdater(node, newVal);
+    })
     this.updater.htmlUpdater(node, value);
   },
   model(node,expr,vm) {
