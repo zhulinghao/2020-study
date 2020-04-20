@@ -1,11 +1,14 @@
 'use strict'
 const path = require("path");
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')    // html
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');    // 提取出css文件
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');   // 压缩css文件
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');  // 在build之前先清空构建目录产物
+
 
 module.exports = {
+  mode: 'production',
   entry: {
     index: './src/index.js',
     search: './src/search.js',
@@ -14,7 +17,6 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     filename: '[name]-[chunkhash:8].js'
   },
-  mode: 'production',
   // 概念：每一个loader都是一个方法，根据传入的参数返回相应的结果
   module: {
     rules: [
@@ -24,7 +26,17 @@ module.exports = {
         use: [
           MiniCssExtractPlugin.loader,
           // 'style-loader', // style-loader 把js字符串声成为style节点
-          'css-loader'  // 把css解析成 commonjs 再传递给style-loader
+          'css-loader',  // 把css解析成 commonjs 再传递给style-loader
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [
+                require('autoprefixer')({
+                  browsers: ['last 2 version', '>1%', 'ios 7']  //兼容使用大于1%的和浏览器最新版本的前两个版本
+                })
+              ]
+            }
+          }
         ] 
       },
       { 
@@ -33,7 +45,17 @@ module.exports = {
           MiniCssExtractPlugin.loader,
           // 'style-loader', // style-loader 把js字符串声成为style节点
           'css-loader',   // 把css转换成成 commonjs 再传递给style-loader
-          'less-loader'   // 把less编译成css
+          'less-loader',   // 把less编译成css
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [
+                require('autoprefixer')({
+                  browsers: ['last 2 version', '>1%', 'ios 7']  //兼容使用大于1%的和浏览器最新版本的前两个版本
+                })
+              ]
+            }
+          }
         ] 
       },
       // 图片文件
@@ -63,17 +85,26 @@ module.exports = {
     ]
   },
   plugins: [
+    new CleanWebpackPlugin(),
     // 提取出css文件
     new MiniCssExtractPlugin({
       filename: '[name]-[contenthash:8].css'
     }),
     // 压缩css文件
     new OptimizeCssAssetsPlugin(),
-    // html 模板
+    // index
     new HtmlWebpackPlugin({
-      title: 'Learn Webpack',
-      filename: 'index.html',
-      template: 'public/index.html'
+      title: 'index',
+      chunks: ['index'],
+      inject: true
+    }),
+    // search 模板
+    new HtmlWebpackPlugin({
+      title: 'search Webpack',
+      filename: 'search.html',
+      chunks: ['search'],          // 指定chunk
+      inject: true,
+      template: 'public/search.html'
     })
   ]
   /*
