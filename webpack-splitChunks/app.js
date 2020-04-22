@@ -20,7 +20,6 @@ app.use(webpackHotMiddleware(compler))
 app.get('/:page', (req, res, next) => {
   const pagename = req.params.page ? req.params.page + '.html' : 'index.html'
   const filePath = path.join(compler.outputPath, pagename)
-console.log(filePath)
   compler.outputFileSystem.readFile(filePath, (err, result) => {
     if(err){
       console.log('路径无效')

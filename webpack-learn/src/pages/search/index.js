@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import './search.less'
-import avatar from './images/avatar.jpg';
-
+import avatar from '../../images/avatar.jpg';
+import 'lib-flexible'
 export default class Search extends React.Component {
   render() {
     return (
