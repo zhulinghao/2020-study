@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>flex</title>
+  <style>
+    .box {
+      display: flex;
+      margin: 5px 15px;
+      background-color: cornsilk;
+    }
+    .box-item {
+      height: 40px;
+      width: 40px;
+      margin: 10px;
+      text-align: center;
+      line-height: 40px;
+      background-color: aqua;
+    }
+
+    .direction-row {
+      flex-direction: row; /* row 、 row-reverse column column-reverse */
+    }
+    .direction-column {
+      flex-direction: column; /* row 、 row-reverse column column-reverse */
+    }
+    .direction-column-reverse {
+      flex-direction: column-reverse; /* row 、 row-reverse column column-reverse */
+    }
+    .direction-row-reverse {
+      flex-direction: row-reverse; /* row 、 row-reverse column column-reverse */
+    }
+  </style>
+</head>
+<body>
+  <!-- 弹性布局，用来为盒状模型提供最大的灵活性 -->
+  <!-- 子元素的float、clear和vertical-align会失效 -->
+  <h4>flex-direction属性，决定主轴的方向，即项目的排列方向</h4>
+  <div style="display: flex;">
+    <div class="box direction-row" title="row">
+      <div class="box-item">1</div>
+      <div class="box-item">2</div>
+      <div class="box-item">3</div>
+      <div class="box-item">4</div>
+      <div class="box-item">5</div>
+    </div>
+    <div class="box direction-row-reverse" title="row-reverse">
+      <div class="box-item">1</div>
+      <div class="box-item">2</div>
+      <div class="box-item">3</div>
+      <div class="box-item">4</div>
+      <div class="box-item">5</div>
+    </div>
+    <div class="box direction-column" title="column">
+      <div class="box-item">1</div>
+      <div class="box-item">2</div>
+      <div class="box-item">3</div>
+      <div class="box-item">4</div>
+      <div class="box-item">5</div>
+    </div>
+    <div class="box direction-column" title="column-reverse">
+      <div class="box-item">1</div>
+      <div class="box-item">2</div>
+      <div class="box-item">3</div>
+      <div class="box-item">4</div>
+      <div class="box-item">5</div>
+    </div>
+  </div>
+
+  <h4>flex-wrap属性,item都排在一条轴线上，flex-wrap属性定义，如果排不下如何换行</h4>
+  <div class="box" style="flex-wrap: nowrap;" title="nowrap">
+    <div class="box-item" style="width: 25%;">1</div>
+    <div class="box-item" style="width: 25%;">2</div>
+    <div class="box-item" style="width: 25%;">3</div>
+    <div class="box-item" style="width: 25%;">4</div>
+    <div class="box-item" style="width: 25%;">5</div>
+  </div>
+  <div class="box" style="flex-wrap: wrap;" title="wrap">
+    <div class="box-item" style="width: 25%;">1</div>
+    <div class="box-item" style="width: 25%;">2</div>
+    <div class="box-item" style="width: 25%;">3</div>
+    <div class="box-item" style="width: 25%;">4</div>
+    <div class="box-item" style="width: 25%;">5</div>
+  </div>
+  <div class="box" style="flex-wrap: wrap-reverse;" title="wrap-reverse">
+    <div class="box-item" style="width: 25%;">1</div>
+    <div class="box-item" style="width: 25%;">2</div>
+    <div class="box-item" style="width: 25%;">3</div>
+    <div class="box-item" style="width: 25%;">4</div>
+    <div class="box-item" style="width: 25%;">5</div>
+  </div>
+
+  <h4>flex-flow属性是flex-direction属性和flex-wrap属性的简写形式，默认值为row nowrap</h4>
+  <div class="box" style="flex-flow: column wrap-reverse;" title="column wrap-reverse">
+    <div class="box-item" style="width: 25%;">1</div>
+    <div class="box-item" style="width: 25%;">2</div>
+    <div class="box-item" style="width: 25%;">3</div>
+    <div class="box-item" style="width: 25%;">4</div>
+    <div class="box-item" style="width: 25%;">5</div>
+  </div>
+
+  <h4>justify-content属性，定义主轴的对齐方式</h4>
+  <div class="box" style="justify-content: center;" title="center">
+    <div class="box-item">1</div>
+    <div class="box-item">2</div>
+    <div class="box-item">3</div>
+    <div class="box-item">4</div>
+    <div class="box-item">5</div>
+  </div>
+  <div class="box" style="justify-content: flex-end;" title="flex-end">
+    <div class="box-item">1</div>
+    <div class="box-item">2</div>
+    <div class="box-item">3</div>
+    <div class="box-item">4</div>
+    <div class="box-item">5</div>
+  </div>
+  <div class="box" style="justify-content: space-around;" title="space-around">
+    <div class="box-item">1</div>
+    <div class="box-item">2</div>
+    <div class="box-item">3</div>
+    <div class="box-item">4</div>
+    <div class="box-item">5</div>
+  </div>
+  <div class="box" style="justify-content: space-between;" title="space-between">
+    <div class="box-item">1</div>
+    <div class="box-item">2</div>
+    <div class="box-item">3</div>
+    <div class="box-item">4</div>
+    <div class="box-item">5</div>
+  </div>
+  
+  <h4>align-items属性，定义item在交叉轴上面的对齐方式</h4>
+
+</body>
+</html>

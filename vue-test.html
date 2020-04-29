@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+  <title>vue test</title>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="text/javascript">
+    let vm = new Vue({
+      el: '#app',
+      template: `
+        <div v-html="htmlStr"><div>
+      `,
+      data() {
+        return {
+          htmlStr: ''
+        }
+      },
+      mounted() {
+        this.htmlStr = "xxxxxxxxxxxx";
+        this.htmlStr = "\<script\>alert(123)\<\/script\>";
+      }
+    })
+  </script>
+</body>
+</html>

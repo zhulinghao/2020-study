@@ -15,7 +15,7 @@ const setMPA = () => {
   entryFiles.forEach(eItem => {
     let match = eItem.match(/src\/pages\/(.*)\/index\.js/);
     const pageName = match && match[1];
-    entry[pageName] = entryFiles;
+    entry[pageName] = eItem;
     htmlWebpackPlugins.push(
       new HtmlWebpackPlugin({
         title: pageName,
@@ -33,7 +33,6 @@ const setMPA = () => {
 
 const {entry, htmlWebpackPlugins} = setMPA();
 
-console.log(glob.sync(path.join(__dirname, './src/pages/*/index.js')));
 
 module.exports = {
   entry: entry,
