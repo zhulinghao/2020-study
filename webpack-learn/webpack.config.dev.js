@@ -3,6 +3,8 @@ const path = require("path");
 const base = require("./webpack.config.base")
 const webpack = require("webpack")
 
+console.log(base.entry);
+
 module.exports = {
   mode: 'development',
   output: {
@@ -10,14 +12,15 @@ module.exports = {
     filename: '[name].js'
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.HotModuleReplacementPlugin()
   ].concat(base.plugins),
   // 热更新
   devServer: {
-    // contentBase: "./dist",
+    contentBase: "./dist",
     hot: true,
     port: 54323
   },
   entry: base.entry,
-  module: base.module
+  module: base.module,
+  devtool: 'source-map'
 }

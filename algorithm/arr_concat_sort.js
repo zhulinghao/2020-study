@@ -38,13 +38,13 @@ function concatAndSort(arr1, arr2) {
   for(let i = 0;i < maxLen;i ++) {
     let item1 = arr1[i], item2 = arr2[i];
     if(item1 > item2) {
+      newArr.push(item2);
+      newArr.push(item1);
+    } else {
       newArr.push(item1);
       newArr.push(item2);
-    } else {
-
     }
   }
-  
 }
 
 console.log(concatAndSort(arr1, arr2));

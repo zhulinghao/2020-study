@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>伪装百度</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .malicious-script {
+      position: fixed;
+      height: 41px;
+      width: 112px;
+      background-color: red;
+      cursor: pointer;
+      opacity: .4;
+    }
+    .normal {
+      left: 60vw;
+      top: 23vh;
+    }
+    .top {
+      left: 34vw;
+      top: 1vh;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="iframe-bd" src="http://www.baidu.com" width="100%" style="height: 100vh;" frameborder="0"></iframe>
+  <div class="malicious-script normal"></div>
+  <div class="malicious-script top"></div>
+  <script>
+    window.onload = function() {
+      // document.querySelector('#iframe-bd').setAttribute('wid)
+      document.querySelectorAll(".malicious-script").forEach(element => {
+        element.addEventListener('click', () => {
+          alert('hhhhhhhhhhhhhh')
+        })
+      });
+      
+    }
+  </script>
+</body>
+</html>

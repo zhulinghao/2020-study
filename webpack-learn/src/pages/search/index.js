@@ -7,7 +7,7 @@ export default class Search extends React.Component {
   render() {
     return (
       <>
-        <div className="search--text">Search king of  DDDDDDDDDDDDD </div>
+        <div className="search--text">Search king of asdasd</div>
         <img src={avatar}></img>
       </>
     )

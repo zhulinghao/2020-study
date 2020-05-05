@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>搜索页面</title>
+</head>
+<body>
+  <input type="text" name="" id="search">
+  <button id="submit">搜索</button>
+  <div id="result">
+
+  </div>
+  <script>
+    // bad code case  script
+    const input = document.getElementById('search')
+    const submitBtn = document.getElementById('submit')
+    const result = document.getElementById('result')
+
+    submitBtn.addEventListener('click', (e) => {
+      const value = input.value
+      location.href = '/search?q=' + value
+    })
+  </script>
+</body>
+</html>
