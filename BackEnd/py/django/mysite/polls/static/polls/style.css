@@ -1,0 +1,41 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+li a {
+  color: green;
+}
+body {
+  transition: .5s;
+}
+body:hover {
+  filter: blur(5px);
+  transition: .5s;
+}
+ul {
+  position: absolute;
+  z-index: 1;
+}
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+body::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: white url('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1564476098681&di=28ec1d5f5dbe55e064c2de64e06e14ea&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F03839555742a6c932f875b70fb894f0.jpg') no-repeat;
+  background-size: cover;
+  /* opacity: .4; */
+  /* filter: blur(5px); */
+  z-index: 0;
+}

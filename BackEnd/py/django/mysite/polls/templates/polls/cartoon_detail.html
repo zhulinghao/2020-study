@@ -1,0 +1,21 @@
+
+<h1>{{ cartoonbook.book_name }}</h1>
+
+{% if error_message %}<p><strong style="color: red;">{{ error_message }}</strong></p>{% endif %}
+
+{% csrf_token %}
+{% for item in cartoonbook.cartoonchapter_set.all %}
+    <a href="{% url 'polls:cartoon_read' item.id %}">{{item.name}}--</a>
+{% endfor %}
+<!-- {{cartoonbook.cartoonchapter_set.all.first.content}} -->
+<style>
+h1 {
+    text-align: center;
+}
+a {
+    width: 150px;
+    margin-top: 10px;
+    text-align: center;
+    display: inline-block;
+}
+</style>

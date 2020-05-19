@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>前端路由</title>
+</head>
+<body>
+  <a href="#/test1">test1</a>
+  <a href="#/test2">test2</a>
+  <div id="root"></div>
+  <script>
+    const root = document.querySelector('#root');
+    window.onhashchange = function (e) {
+      var hash = window.location.hash.substr(1);
+      if(hash === '/test1') {
+        root.innerHTML = '这是test1组件';
+      }
+      if (hash === '/test2') {
+        root.innerHTML = '这是test2组件';
+      }
+    }
+  </script>
+</body>
+</html>

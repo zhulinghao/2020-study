@@ -1,0 +1,30 @@
+
+<h1>{{ cartoonchapter.name }}</h1>
+
+{% if error_message %}<p><strong style="color: red;">{{ error_message }}</strong></p>{% endif %}
+
+{% csrf_token %}
+<div class="content">
+    {% for item in cartoonchapter.content %}
+        <img src="{{item.url}}" class="item" alt="{{item.title}}">
+    {% endfor %}
+</div>
+<style>
+h1 {
+    text-align: center;
+}
+a {
+    width: 150px;
+    margin-top: 10px;
+    text-align: center;
+    display: inline-block;
+}
+.content {
+    padding: 0 20px;
+}
+.item {
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+</style>

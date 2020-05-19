@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>cartoon</title>
+  <!-- {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}"> -->
+</head>
+
+<body>
+  {% if cartoon_list %}
+  <ul>
+    {% for item in cartoon_list %}
+    <li><a href="{% url 'polls:cartoon_detail' item.id %}">{{ item.book_name }}</a></li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No polls are available.</p>
+  {% endif %}
+</body>
+
+</html>

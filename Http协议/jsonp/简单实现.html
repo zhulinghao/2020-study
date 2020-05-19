@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jsonp</title>
+</head>
+<body>
+  
+  <script>
+    function test() {
+      console.log(arguments);
+    }
+
+    function jsonp(obj) {
+      let { url, callback } = obj;
+      let script = document.createElement('script');
+      script.src = `${url}?callback=${callback}`;
+      document.getElementsByTagName('head')[0].appendChild(script);
+    }
+
+    jsonp({
+      url: 'http://localhost:54322/get',
+      callback: 'test'
+    });
+    
+  </script>
+</body>
+</html>

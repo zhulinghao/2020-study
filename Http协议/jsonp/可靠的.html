@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jsonp</title>
+</head>
+<body>
+  
+  <script>
+    (function(global) {
+      var id = 0,
+          container = document.getElementsByTagName("head")[0];
+
+      function jsonp(options) {
+        if(!options || !options.url) return;
+        var scriptNode = document.createElement('script'),
+            data = options.data || {},
+            url = options.url,
+            callback = options.callback;
+            fnName = "jsonp" + id++;
+        data['callback'] = fnName;
+
+        for(let k in data) {
+          url += url.indexOf('?') === -1 ? '?' : '&';
+          url += `${k}=${data[k]}`;
+        }
+
+        scriptNode.src = url;
+
+        global[fnName] = function() {
+          callback && callback(...arguments);
+          // 执行完成后删除script标签和全局方法
+          container.removeChild(scriptNode);
+          delete global[fnName];
+        }
+
+        // 出错处理
+        scriptNode.onerror = function () {
+          callback && callback({error:"error"});
+          container.removeChild(scriptNode);
+          global[fnName] && delete global[fnName];
+        }
+
+        scriptNode.type = "text/javascript";
+        container.appendChild(scriptNode);
+      }
+
+      global.jsonp = jsonp;
+    })(this);
+
+    jsonp({
+      url: 'http://localhost:54322/get',
+      data: {
+        id: 1
+      },
+      callback() {
+        console.log(arguments);
+      }
+    });
+    
+  </script>
+</body>
+</html>
