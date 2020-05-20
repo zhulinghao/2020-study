@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas滤镜</title>
+    <style>
+        #color {
+            height: 50px;
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="imgFilter">
+        <div>浏览器不支持canvas</div>
+    </canvas>
+    <div id="color"></div>
+    <script>
+        let canvas = document.querySelector('#imgFilter');
+        if(canvas.getContext) {
+            let ctx = canvas.getContext('2d');
+            var img = new Image();
+            img.crossOrigin = "anonymous";
+            img.src = './img/demo1.jpg';
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0);
+                img.style.display = 'none';
+            };
+            var color = document.getElementById('color');
+            
+            function pick(event) {
+                var x = event.layerX;
+                var y = event.layerY;
+                var pixel = ctx.getImageData(x, y, 1, 1);
+                var data = pixel.data;
+                var rgba = 'rgba(' + data[0] + ',' + data[1] +
+                            ',' + data[2] + ',' + (data[3] / 255) + ')';
+                color.style.background =  rgba;
+                color.textContent = rgba;
+            }
+            canvas.addEventListener('mousemove', pick);
+
+        } else {
+            console.log("浏览器不支持canvas");
+        }
+
+    </script>
+</body>
+</html>
