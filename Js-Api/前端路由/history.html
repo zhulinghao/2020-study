@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>前端路由-history 能兼容到IE8</title>
+</head>
+<body>
+  <ul>
+    <li>
+      <button onclick="router.push('/')">主页</button>
+    </li>
+    <li>
+      <button onclick="router.push('/test1')">test1</button>
+    </li>
+    <li>
+      <button onclick="router.push('/test2')">test2</button>
+    </li>
+  </ul>
+
+  <div id="root"></div>
+
+  <script type="text/javascript">
+    var root = document.getElementById('root'), baseUrl = '/';
+
+    class Router {
+      constructor(opts) {
+        this.routes = {};
+        this.curUrl = '';
+        this.mode = '';
+
+        if(opts) {
+          this.mode = opts.mode;
+          if(this.mode === 'history') {
+            this.historyRouterLisener();
+          } else {
+            this.hashRouterLisener();
+          }
+        } else {
+          this.hashRouterLisener();
+        }
+        if(opts.routes) {
+          opts.routes.forEach(item => {
+            this.route(item.path, item.cb);
+          });
+        }
+      }
+
+      historyRouterLisener() {
+        window.addEventListener('load', this.historyRouter.bind(this));
+        window.addEventListener('popstate', this.historyRouter.bind(this));
+      }
+
+      hashRouterLisener() {
+        window.addEventListener('load', this.hashRouter.bind(this));
+        window.addEventListener('hashchange', this.hashRouter.bind(this));
+      }
+
+      hashRouter() {
+        this.curUrl = window.location.hash.slice(1) || '/';
+        this.routes[this.curUrl]();
+      }
+
+      historyRouter() {
+        this.curUrl = window.location.pathname;
+        this.routes[this.curUrl]();
+      }
+
+      push(url) {
+        if(this.mode === 'history') {
+          window.history.pushState({}, null, url);
+          this.routes[url]();
+        } else {
+          url = '#' + url;
+          window.location.href = url;
+        }
+      }
+
+      route(path, cb) {
+        this.routes[path] = cb || function() {};
+      }
+    }
+
+
+    let router = new Router({ mode: 'history', routes: [
+      { path: baseUrl, cb: () => { root.innerHTML = '首页' } },
+      { path: baseUrl + 'test1', cb: () => { root.innerHTML = 'test1' } },
+      { path: baseUrl + 'test2', cb: () => { root.innerHTML = 'test2' } },
+    ] })
+
+    router.push(baseUrl);
+  </script>
+</body>
+</html>

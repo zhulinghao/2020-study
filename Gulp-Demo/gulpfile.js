@@ -15,8 +15,7 @@ const rev = require('gulp-rev'),
 revCollector = require('gulp-rev-collector');
 const cleanCSS = require('gulp-clean-css');
 const del = require('del');
-const assetRev = require('gulp-asset-rev');
-
+const htmlmin = require('gulp-htmlmin');
 /**
  * Variables
  */
@@ -33,20 +32,39 @@ const paths = {
   css: devPath + '/css/*.css',
   less: devPath + '/**/*.less',
   html: devPath + '/**/{*.html,!common}',
-  js: devPath + '/**/*.js',
-  assets: devPath + '/**/*.png',
+  js: devPath + '/js/*.js',
+  assets: devPath + '/assets/**/*.{png,jpg,gif,mp4}',
 };
 
 // 环境变量
 const env = {
-  development: {
-    env: 'development'
-  },
-  staging: {
-    env: 'staging'
-  },
-  production: {
-    env: 'production'
+  development: require(`./config/development.json`),
+  staging: require(`./config/staging.json`),
+  production:  require(`./config/production.json`),
+}
+
+const Vinyl = require('vinyl');
+const stringSrc = (filename, string) => {
+  var src = require('stream').Readable({ objectMode: true });
+  src._read = function () {
+    this.push(new Vinyl({ cwd: "", base: null, path: filename, contents: new Buffer(string) }));
+    this.push(null);
+  }
+  return src;
+}
+
+function getEnvTask(envName, releasePath) {
+  if(!envName) return function() {
+    let myConfig = env.development;
+    var result = `window.$env = ${JSON.stringify(myConfig)}`;
+    return stringSrc("env.js", result)
+      .pipe(dest(`${releasePath}/js`))
+  }
+  return function() {
+    let myConfig = env[envName];
+    var result = `window.$env = ${JSON.stringify(myConfig)}`;
+    return stringSrc("env.js", result)
+      .pipe(dest(`${releasePath}/js`))
   }
 }
 
@@ -64,10 +82,10 @@ const handleErrors = function () {
 };
 
 //定义特殊文件(图片，字体文件等,会在任务开始前就移入至dist文件夹)
-var resource = [ `${devPath}/**/*`, `!${devPath}/**/*.html`, `!${devPath}/**/*.less`,  `!${devPath}/**/*.js` ];
+const resourceDev = [ `${devPath}/**/*`, `!${devPath}/**/*.html`, `!${devPath}/**/*.less` ];
 //将除了css,js,html 的资源先移入至目标目录
 const moveResourceDev = () => {
-    return src(resource)
+    return src(resourceDev)
         .pipe(changed(tempPath))
         .pipe(dest(tempPath));
 };
@@ -115,17 +133,19 @@ task('serve', () => {
   lessCompilerDev();
   moveResourceDev();
   fileIncludeDev();
+  getEnvTask(null, tempPath)();
   serve();
   watch([ paths.html, paths.css, paths.js, paths.less ], reload);
   watch(paths.less, lessCompilerDev);
   watch(paths.html, fileIncludeDev);
-  watch(resource, moveResourceDev);
+  watch(resourceDev, moveResourceDev);
 });
 
 
 /**
  * Release Start
  */
+const resource = [ `${devPath}/**/*`, `!${devPath}/**/*.html`, `!${devPath}/**/*.less`,  `!${paths.js}`, `!${paths.assets}` ];
 
 function releaseWrapper(name, releasePath, envData) {
   const lessCompiler = () => {
@@ -137,7 +157,6 @@ function releaseWrapper(name, releasePath, envData) {
         }))
         .pipe(less())
         .pipe(cleanCSS())
-        // .pipe(assetRev())
         .pipe(rev())
         .pipe(dest(releasePath))
         .pipe(rev.manifest())
@@ -167,7 +186,7 @@ function releaseWrapper(name, releasePath, envData) {
     return src(paths.js)
       .pipe(uglify())
       .pipe(rev())
-      .pipe(dest(releasePath))
+      .pipe(dest(`${releasePath}/js`))
       .pipe(rev.manifest())
       .pipe(dest('rev/js'));
   }
@@ -175,18 +194,37 @@ function releaseWrapper(name, releasePath, envData) {
   const revAssets = () => {
     return src(paths.assets)
       .pipe(rev())
-      .pipe(dest(releasePath))
+      .pipe(dest(`${releasePath}/assets`))
+      .pipe(rev.manifest())
+      .pipe(dest('rev/img'));
   }
   
   //Html替换css、js文件版本
   const revHtml = () => {
     return src(['rev/**/*.json', `${releasePath}/**/*.html`])
-        // .pipe(assetRev())
+        .pipe(revCollector())
+        .pipe(dest(releasePath));  
+  }
+
+  const revCss = () => {
+    return src(['rev/**/*.json', `${releasePath}/**/*.css`])
         .pipe(revCollector())
         .pipe(dest(releasePath));  
   }
   
-  task(name, series((cb) => { del.sync(releasePath); cb(); }, lessCompiler, moveResource, revJs, fileInclude, revHtml));
+  const htmlMini = () => {
+    return src(`${releasePath}/**/*.html`)
+    .pipe(htmlmin({ 
+      collapseWhitespace: true,
+      minifyJS: true,
+      minifyCSS: true
+    }))
+    .pipe(dest(releasePath));
+  }
+
+  let envName = name.split('-')[1];
+  let envTask = getEnvTask(envName, devPath);
+  task(name, series((cb) => { del.sync(releasePath); cb(); }, lessCompiler, moveResource, envTask, revJs, revAssets, fileInclude, revHtml, revCss, htmlMini));
 }
 
 

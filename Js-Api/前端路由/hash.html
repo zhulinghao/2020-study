@@ -4,23 +4,60 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>前端路由</title>
+  <title>前端路由-hash 能兼容到IE8</title>
 </head>
 <body>
+  <a href="#/">主页</a>
   <a href="#/test1">test1</a>
   <a href="#/test2">test2</a>
   <div id="root"></div>
   <script>
     const root = document.querySelector('#root');
-    window.onhashchange = function (e) {
-      var hash = window.location.hash.substr(1);
-      if(hash === '/test1') {
-        root.innerHTML = '这是test1组件';
+
+    class Router {
+      constructor() {
+        this.routes = {};
+        this.curUrl = '';
+        this.hashRouterLisener();
       }
-      if (hash === '/test2') {
-        root.innerHTML = '这是test2组件';
+
+      hashRouter() {
+        console.log(this)
+        this.curUrl = window.location.hash.slice(1) || '/';
+        this.routes[this.curUrl]();
+        console.log('xxxxxxxxx')
+      }
+
+      hashRouterLisener() {
+        window.addEventListener("load", this.hashRouter.bind(this));
+        window.addEventListener('hashchange', this.hashRouter.bind(this));
+      }
+
+      route(path, cb) {
+        this.routes[path] = cb;
+      }
+      
+      push(url) {
+        url = "#" + url;
+        window.location.href = url;
       }
     }
+
+    let router = new Router();
+    router.route('/', () => {
+      root.innerHTML = '主页';
+    })
+
+    router.route('/test1', () => {
+      root.innerHTML = 'test1';
+    })
+
+    router.route('/test2', () => {
+      root.innerHTML = 'test2';
+    })
+
+    router.push('/');
+
   </script>
 </body>
 </html>
